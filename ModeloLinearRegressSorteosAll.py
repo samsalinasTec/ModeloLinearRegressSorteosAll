@@ -79,4 +79,4 @@ schema = [
     bigquery.SchemaField("FECHA_MAPEADA","DATE")
 ])
 
-BQLoad("C:\Sam\Python\ScriptsMaquinaVirtual\Automatizacion\ModeloLinearRegressSorteosAll\dfPrediccionesTodos.csv","FECHA_MAPEADA",jobConfigFCPredicciones_nacional,"FCPredicciones_nacional","sorteostec-analytics360.PruebasDashboardNacional")
+BQLoad("/home/stadmin/AutomatizacionScripts/ModeloLinearRegressSorteosAll/dfPrediccionesTodos.csv","FECHA_MAPEADA",jobConfigFCPredicciones_nacional,"FCPredicciones_nacional","sorteostec-analytics360.PruebasDashboardNacional")

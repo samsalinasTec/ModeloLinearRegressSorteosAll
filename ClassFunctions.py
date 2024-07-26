@@ -25,7 +25,7 @@ def DNASColumn(columnaFechaMayor: pd.Series = None, columnaFechaMenor: pd.Series
 def BQLoad(fileDirectory,ColumnDateName,schema,tableName,bqDirectory):
     file=pd.read_csv(fileDirectory)
     file[ColumnDateName]=pd.to_datetime(file.loc[:,ColumnDateName])
-    KEY_FILE_LOCATION = "C:\Sam\Python\ScriptsMaquinaVirtual\Automatizacion\DashboardNacionalAnalytics\TablasDMyFC\sorteostec-analytics360-71569ac1fe19.json"
+    KEY_FILE_LOCATION = "/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/sorteostec-analytics360-71569ac1fe19.json"
     credentials = service_account.Credentials.from_service_account_file(KEY_FILE_LOCATION)
     client = bigquery.Client(credentials=credentials,project=credentials.project_id)
     client.delete_table("sorteostec-analytics360.PruebasDashboardNacional"+tableName)
