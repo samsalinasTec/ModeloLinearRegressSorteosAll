@@ -19,7 +19,7 @@ from google.oauth2 import service_account
 mes=7
 añosActual=2024
 
-dfBoletosFisi=pd.read_csv("'/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_fisico.csv")
+dfBoletosFisi=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_fisico.csv")
 dfBoletosDig=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_digital.csv")
 dfInfo=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/dfHistoricoSorteos.csv")
 
