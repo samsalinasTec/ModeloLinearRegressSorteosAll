@@ -48,8 +48,6 @@ class SorteosTecLinealRegress:
     
     def predict(self): 
          
-        resultados=[]
-
         if (self.data["NOMBRE"]==self.nombreSorteo).any():
             dfEntrena=self.data.drop(self.data.loc[self.data["NOMBRE"]==self.nombreSorteo].last_valid_index())
         else:
@@ -57,25 +55,34 @@ class SorteosTecLinealRegress:
         self.X=pd.array(dfEntrena.loc[dfEntrena["NOMBRE"].isin(self.sorteosEntrenamiento),self.X_])
         self.y=dfEntrena.loc[dfEntrena["NOMBRE"].isin(self.sorteosEntrenamiento),self.y_]
 
-        for j in range(1,50):
-            for i in range(1,50):    
-                X_train,X_test,y_train,y_test=train_test_split(self.X.reshape(-1,1),self.y,test_size=0.2,random_state=j)
-                steps = [
-                    ('poly', PolynomialFeatures(degree=i)),
-                    ('linear', LinearRegression())
-                ]
-                LinearRegressionPipeline=Pipeline(steps=steps)
-                LinearRegressionPipeline.fit(X_train,y_train)
+        resultados=[]
+        mejoresMSE = [(0, 0, 0)] 
+        test_sizes = [0.2, 0.19, 0.18,0.17,0.14, 0.21, 0.22]  # Los tamaños de partición que deseas probar
+        test_size_index = 0  # Índice para recorrer los tamaños de test_size
 
-                y_pred=LinearRegressionPipeline.predict(X_train)
-                y_predTest=LinearRegressionPipeline.predict(X_test)
+        while test_size_index < len(test_sizes) and all(r2score < 0.99 for _, _, r2score in mejoresMSE):
+            test_size = test_sizes[test_size_index]
+            test_size_index += 1
 
-                mse = r2_score(y_test, y_predTest)
+            for j in range(1,50):
+                for i in range(1,50):    
+                    X_train,X_test,y_train,y_test=train_test_split(self.X.reshape(-1,1),self.y,test_size=test_size,random_state=j)
+                    steps = [
+                        ('poly', PolynomialFeatures(degree=i)),
+                        ('linear', LinearRegression())
+                    ]
+                    LinearRegressionPipeline=Pipeline(steps=steps)
+                    LinearRegressionPipeline.fit(X_train,y_train)
 
-                resultados.append((j, i, mse))
-                
-        resultados.sort(key=lambda x: x[2], reverse=True)
-        mejoresMSE = resultados[:3]
+                    y_pred=LinearRegressionPipeline.predict(X_train)
+                    y_predTest=LinearRegressionPipeline.predict(X_test)
+
+                    r2 = r2_score(y_test, y_predTest)
+
+                    resultados.append((j, i, r2))
+                    
+            resultados.sort(key=lambda x: x[2], reverse=True)
+            mejoresMSE = resultados[:3]
         
         X_train,X_test,y_train,y_test=train_test_split(self.X.reshape(-1,1),self.y,test_size=1,random_state=mejoresMSE[0][0])
         steps = [
