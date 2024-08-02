@@ -60,7 +60,7 @@ class SorteosTecLinealRegress:
         test_sizes = [0.2, 0.19, 0.18,0.17,0.14, 0.21, 0.22]  # Los tamaños de partición que deseas probar
         test_size_index = 0  # Índice para recorrer los tamaños de test_size
 
-        while test_size_index < len(test_sizes) and all(r2score < 0.97 for _, _, r2score in mejoresMSE):
+        while test_size_index < len(test_sizes) and all(r2score < 0.99 for _, _, r2score in mejoresMSE):
             test_size = test_sizes[test_size_index]
             test_size_index += 1
 
