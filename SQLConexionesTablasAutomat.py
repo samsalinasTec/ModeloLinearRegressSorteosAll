@@ -14,7 +14,7 @@ logging.basicConfig(filename='/home/stadmin/AutomatizacionScripts/ModeloLinearRe
 logging.info("Inicia la descarga")
 
 USUARIO = "SSALINAS"
-PASSWORD = "Pascal1998_"
+PASSWORD = "Democrates1998_"
 cx_Oracle.init_oracle_client()
 dsn_tns = cx_Oracle.makedsn('10.4.39.27', '1521', service_name=r'ORAPRO.MTY.ITESM.MX')
 
