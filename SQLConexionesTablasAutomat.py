@@ -18,8 +18,8 @@ PASSWORD = "Democrates1998_"
 cx_Oracle.init_oracle_client()
 dsn_tns = cx_Oracle.makedsn('10.4.39.27', '1521', service_name=r'ORAPRO.MTY.ITESM.MX')
 
-idSorteo=[1,4,5,38,30,3,41,39]
-numeroJuego=[212,23,23,1,3,42,1,1]
+idSorteo=[1,4,5,38,30,3,41,39,29]
+numeroJuego=[212,23,23,1,3,42,1,1,5]
 
 
 dfInfoSorteo=pd.DataFrame()
