@@ -16,9 +16,6 @@ from ClassFunctions import SorteosTecLinealRegress, DNASColumn, BQLoad
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-mes=8
-añosActual=2024
-
 dfBoletosFisi=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_fisico.csv")
 dfBoletosDig=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_digital.csv")
 dfInfo=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/dataframesPreparacion/dfHistoricoSorteos.csv")
