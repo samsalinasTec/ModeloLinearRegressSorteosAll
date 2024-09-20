@@ -28,6 +28,7 @@ def BQLoad(fileDirectory,ColumnDateName,schema,tableName,bqDirectory):
     KEY_FILE_LOCATION = "/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/sorteostec-analytics360-71569ac1fe19.json"
     credentials = service_account.Credentials.from_service_account_file(KEY_FILE_LOCATION)
     client = bigquery.Client(credentials=credentials,project=credentials.project_id)
+    client.delete_table("sorteostec-analytics360.PruebasDashboardNacional"+"."+tableName)
     client.load_table_from_dataframe(file,bqDirectory+"."+tableName, job_config=schema)
 
 
