@@ -60,7 +60,6 @@ dfPrediccionesTST217=SorteosTecLinealRegress("Sorteo Tradicional 217",270_000,pd
 dfPrediccionesAVT29=SorteosTecLinealRegress("Sorteo AventuraT 29",80_000,pd.to_datetime("18/01/2025",dayfirst=True),["Sorteo AventuraT 23","Sorteo AventuraT 25","Sorteo AventuraT 27","Sorteo AventuraT 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesSOE47=SorteosTecLinealRegress("Sorteo Educativo 47",390_000,pd.to_datetime("19/10/2024",dayfirst=True),["Sorteo Educativo 41","Sorteo Educativo 43","Sorteo Educativo 45","Sorteo Educativo 47"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesSMS30=SorteosTecLinealRegress("Sorteo Mi Sueño 30",260_000,pd.to_datetime("23/11/2024",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 27","Sorteo Mi Sueño 28","Sorteo Mi Sueño 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
-dfPrediccionesDDXV10=SorteosTecLinealRegress("DINERO DE X VIDA 10",290_000,pd.to_datetime("22/02/2025",dayfirst=True),["DINERO DE X VIDA 6","DINERO DE X VIDA 8","DINERO DE X VIDA 10"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesLQ11=SorteosTecLinealRegress("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 
 
