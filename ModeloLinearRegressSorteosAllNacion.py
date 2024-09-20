@@ -20,6 +20,9 @@ dfBoletosFisi=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacional
 dfBoletosDig=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/TablasDMyFC/FCVentas_digital.csv")
 dfInfo=pd.read_csv("/home/stadmin/AutomatizacionScripts/DashboardNacionalAnalytics/dataframesPreparacion/dfHistoricoSorteos.csv")
 
+dfBoletosFisi=dfBoletosFisi.loc[dfBoletosFisi["CANAL_TRADICIONAL"]!="Membresias"]
+dfBoletosDig=dfBoletosDig.loc[dfBoletosDig["CANAL_DIG"]!="Membresias"]
+
 dfBoletosDig=dfBoletosDig[["ID_SORTEO","ID_SORTEO_DIA","FECHAREGISTRO","CANTIDAD_BOLETOS"]]
 dfBoletosFisi=dfBoletosFisi[["ID_SORTEO","ID_SORTEO_DIA","FECHAREGISTRO","CANTIDAD_BOLETOS"]]
 dfBoletos=pd.concat([dfBoletosFisi,dfBoletosDig])
@@ -53,16 +56,17 @@ dfBoletosEscalado=dfBoletosEscalado.sort_values(["NOMBRE","DNAS"],ascending=Fals
 
 
 dfPrediccionesDDXV9=SorteosTecLinealRegress("DINERO DE X VIDA 9",290_000,pd.to_datetime("21/09/2024",dayfirst=True),["DINERO DE X VIDA 5","DINERO DE X VIDA 7","DINERO DE X VIDA 9"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
-dfPrediccionesSMS29=SorteosTecLinealRegress("Sorteo Mi Sueño 29",280_000,pd.to_datetime("24/08/2024",dayfirst=True),["Sorteo Mi Sueño 23","Sorteo Mi Sueño 26","Sorteo Mi Sueño 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesTST217=SorteosTecLinealRegress("Sorteo Tradicional 217",270_000,pd.to_datetime("21/12/2024",dayfirst=True),["Sorteo Tradicional 211","Sorteo Tradicional 213","Sorteo Tradicional 215","Sorteo Tradicional 217"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesAVT29=SorteosTecLinealRegress("Sorteo AventuraT 29",80_000,pd.to_datetime("18/01/2025",dayfirst=True),["Sorteo AventuraT 23","Sorteo AventuraT 25","Sorteo AventuraT 27","Sorteo AventuraT 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesSOE47=SorteosTecLinealRegress("Sorteo Educativo 47",390_000,pd.to_datetime("19/10/2024",dayfirst=True),["Sorteo Educativo 41","Sorteo Educativo 43","Sorteo Educativo 45","Sorteo Educativo 47"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
 dfPrediccionesSMS30=SorteosTecLinealRegress("Sorteo Mi Sueño 30",260_000,pd.to_datetime("23/11/2024",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 27","Sorteo Mi Sueño 28","Sorteo Mi Sueño 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado).predict()
+dfPrediccionesDDXV10=SorteosTecLinealRegress("DINERO DE X VIDA 10",290_000,pd.to_datetime("22/02/2025",dayfirst=True),["DINERO DE X VIDA 6","DINERO DE X VIDA 8","DINERO DE X VIDA 10"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado)
+dfPrediccionesLQ11=SorteosTecLinealRegress("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE",dfBoletosEscalado)
 
 
 listDataframes = [v for k, v in globals().items() if k.startswith('dfPredicciones')]
 dfPrediccionesTodos = pd.concat(listDataframes, ignore_index=True)
-dfPrediccionesTodos.to_csv("/home/stadmin/AutomatizacionScripts/ModeloLinearRegressSorteosAll/dfPrediccionesTodos.csv",header=True,index=False)
+dfPrediccionesTodos.to_csv("/home/stadmin/AutomatizacionScripts/ModeloLinearRegressSorteosAll/dfPrediccionesTodosNacional.csv",header=True,index=False)
 
 jobConfigFCPredicciones_nacional = bigquery.LoadJobConfig(
 schema = [
@@ -78,4 +82,4 @@ schema = [
     bigquery.SchemaField("FECHA_MAPEADA","DATE")
 ])
 
-BQLoad("/home/stadmin/AutomatizacionScripts/ModeloLinearRegressSorteosAll/dfPrediccionesTodos.csv","FECHA_MAPEADA",jobConfigFCPredicciones_nacional,"FCPredicciones_nacional","sorteostec-analytics360.PruebasDashboardNacional")
+BQLoad("/home/stadmin/AutomatizacionScripts/ModeloLinearRegressSorteosAll/dfPrediccionesTodosNacional.csv","FECHA_MAPEADA",jobConfigFCPredicciones_nacional,"FCPredicciones_nacional","sorteostec-analytics360.PruebasDashboardNacional")
