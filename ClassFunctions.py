@@ -102,9 +102,8 @@ class SorteosTecLinealRegress:
         IDColumn=self.data.loc[self.data["NOMBRE"]==self.nombreSorteo,"ID_SORTEO"].max()
         PorcentDNASColumn=np.linspace(0,1,maxDNAS)
         AvanceEstimColumn= self.y_predict
-        TalonesEstimColumn= self.y_predict
 
-        PrediccionesDict={"ID_SORTEO":IDColumn,"SORTEO":self.nombreSorteo,"DNAS":DNASColumn,"PORCENTAJE_DNAS":PorcentDNASColumn,"AVANCE_ESTIMADO":AvanceEstimColumn,"TALONES_ESTIMADOS":TalonesEstimColumn*self.emision}
+        PrediccionesDict={"ID_SORTEO":IDColumn,"SORTEO":self.nombreSorteo,"DNAS":DNASColumn,"PORCENTAJE_DNAS":PorcentDNASColumn,"AVANCE_ESTIMADO":AvanceEstimColumn,"TALONES_ESTIMADOS":AvanceEstimColumn*self.emision}
         dfPredicciones=pd.DataFrame(PrediccionesDict)
 
         
@@ -115,6 +114,100 @@ class SorteosTecLinealRegress:
 
         dfPredicciones['AVANCE_ESTIMADO_DIARIO'] = dfPredicciones['AVANCE_ESTIMADO'].diff()
         dfPredicciones.iloc[0,7]=dfPredicciones["AVANCE_ESTIMADO"][0]
+
+        
+        fechaInicio = self.fechaCelebra - timedelta(days=int(maxDNAS))
+        fechaFin = self.fechaCelebra
+
+        # Crear el rango de fechas
+        rangoFechas = pd.date_range(start=fechaInicio, end=fechaFin)
+        
+        dfPredicciones["FECHA_MAPEADA"]=rangoFechas[1:]
+
+        dfPredicciones["FECHAAPOYO"]=(dfPredicciones['FECHA_MAPEADA']- pd.Timestamp('1899-12-30')).dt.days
+        dfPredicciones["ID_SORTEO_DIA"]=(dfPredicciones["FECHAAPOYO"].astype(str)+dfPredicciones["ID_SORTEO"].astype(str)).astype(np.int64)
+        dfPredicciones=dfPredicciones.drop("FECHAAPOYO",axis=1)
+        return dfPredicciones
+    
+class SorteosTecLRWM:
+    def __init__(self,nombreSorteo,emision,fechaCelebra,sorteosEntrenamiento,X_,y_,data):
+
+        self.nombreSorteo=nombreSorteo
+        self.emision=emision
+        self.sorteosEntrenamiento=sorteosEntrenamiento
+        self.fechaCelebra=fechaCelebra
+        self.X_=X_
+        self.y_=y_
+        self.data=data    
+    def predict(self): 
+         
+        if (self.data["NOMBRE"]==self.nombreSorteo).any():
+            dfEntrena=self.data.drop(self.data.loc[self.data["NOMBRE"]==self.nombreSorteo].last_valid_index())
+        else:
+            dfEntrena=self.data
+        self.X=pd.array(dfEntrena.loc[dfEntrena["NOMBRE"].isin(self.sorteosEntrenamiento),self.X_])
+        self.y=dfEntrena.loc[dfEntrena["NOMBRE"].isin(self.sorteosEntrenamiento),self.y_]
+
+        resultados=[]
+        mejoresMSE = [(0, 0, 0)] 
+        test_sizes = [0.2, 0.19, 0.18,0.17,0.14, 0.21, 0.22]  # Los tamaños de partición que deseas probar
+        test_size_index = 0  # Índice para recorrer los tamaños de test_size
+
+        while test_size_index < len(test_sizes) and all(r2score < 0.99 for _, _, r2score in mejoresMSE):
+            test_size = test_sizes[test_size_index]
+            test_size_index += 1
+
+            for j in range(1,50):
+                for i in range(1,50):    
+                    X_train,X_test,y_train,y_test=train_test_split(self.X.reshape(-1,1),self.y,test_size=test_size,random_state=j)
+                    steps = [
+                        ('poly', PolynomialFeatures(degree=i)),
+                        ('linear', LinearRegression())
+                    ]
+                    LinearRegressionPipeline=Pipeline(steps=steps)
+                    LinearRegressionPipeline.fit(X_train,y_train)
+
+                    y_pred=LinearRegressionPipeline.predict(X_train)
+                    y_predTest=LinearRegressionPipeline.predict(X_test)
+
+                    r2 = r2_score(y_test, y_predTest)
+
+                    resultados.append((j, i, r2))
+                    
+            resultados.sort(key=lambda x: x[2], reverse=True)
+            mejoresMSE = resultados[:3]
+        
+        X_train,X_test,y_train,y_test=train_test_split(self.X.reshape(-1,1),self.y,test_size=1,random_state=mejoresMSE[0][0])
+        steps = [
+            ('poly', PolynomialFeatures(degree=mejoresMSE[0][1])),
+            ('linear', LinearRegression())
+        ]
+
+        LinearRegressionPipeline=Pipeline(steps=steps)
+        LinearRegressionPipeline.fit(X_train,y_train)
+
+        maxDNAS=int(dfEntrena.loc[dfEntrena["NOMBRE"]==self.nombreSorteo,"DNAS"].max())
+        DNAS=range(maxDNAS,1,-1)
+        self.X_toPredict=np.linspace(0,1,maxDNAS)
+        self.y_predict=LinearRegressionPipeline.predict(self.X_toPredict.reshape(-1,1))
+
+        DNASColumn=range(maxDNAS,0,-1)
+        IDColumn=self.data.loc[self.data["NOMBRE"]==self.nombreSorteo,"ID_SORTEO"].max()
+        dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),["BOLETOS_ACUMULADOS_MEMBRESIAS", "DNAS"]]
+        AvanceEstimColumn= self.y_predict
+        
+
+
+        PrediccionesDict={"ID_SORTEO":IDColumn,"SORTEO":self.nombreSorteo,"DNAS":DNASColumn,"TALONES_ESTIMADOS":AvanceEstimColumn*self.emision}
+        dfPredicciones=pd.DataFrame(PrediccionesDict)
+
+        dfPredicciones=pd.merge(dfPredicciones,dfMembresias,on="DNAS",how="left")
+        dfPredicciones["TALONES_ESTIMADOS"]=dfPredicciones["BOLETOS_ACUMULADOS_MEMBRESIAS"]+dfPredicciones["TALONES_ESTIMADOS"]
+
+        dfPredicciones.loc[dfPredicciones["DNAS"]<=2,"TALONES_ESTIMADOS"]+=0
+        dfPredicciones['TALONES_DIARIOS_ESTIMADOS'] = dfPredicciones['TALONES_ESTIMADOS'].diff()
+        dfPredicciones.iloc[0,4]=dfPredicciones["TALONES_ESTIMADOS"][0]
+        dfPredicciones=dfPredicciones.drop("BOLETOS_ACUMULADOS_MEMBRESIAS",axis=1)
 
         
         fechaInicio = self.fechaCelebra - timedelta(days=int(maxDNAS))
