@@ -193,7 +193,7 @@ class SorteosTecLRWM:
 
         DNASColumn=range(maxDNAS,0,-1)
         IDColumn=self.data.loc[self.data["NOMBRE"]==self.nombreSorteo,"ID_SORTEO"].max()
-        dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),["BOLETOS_ACUMULADOS_MEMBRESIAS", "DNAS"]]
+        dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),["CANTIDAD_BOLETOS_MEMBRESIAS", "DNAS"]]
         AvanceEstimColumn= self.y_predict
         
 
@@ -201,15 +201,16 @@ class SorteosTecLRWM:
         PrediccionesDict={"ID_SORTEO":IDColumn,"SORTEO":self.nombreSorteo,"DNAS":DNASColumn,"TALONES_ESTIMADOS":AvanceEstimColumn*self.emision}
         dfPredicciones=pd.DataFrame(PrediccionesDict)
 
-        dfPredicciones=pd.merge(dfPredicciones,dfMembresias,on="DNAS",how="left")
-        dfPredicciones["TALONES_ESTIMADOS"]=dfPredicciones["BOLETOS_ACUMULADOS_MEMBRESIAS"]+dfPredicciones["TALONES_ESTIMADOS"]
-
         dfPredicciones.loc[dfPredicciones["DNAS"]<=2,"TALONES_ESTIMADOS"]+=0
         dfPredicciones['TALONES_DIARIOS_ESTIMADOS'] = dfPredicciones['TALONES_ESTIMADOS'].diff()
         dfPredicciones.iloc[0,4]=dfPredicciones["TALONES_ESTIMADOS"][0]
-        dfPredicciones=dfPredicciones.drop("BOLETOS_ACUMULADOS_MEMBRESIAS",axis=1)
 
         
+        dfPredicciones=pd.merge(dfPredicciones,dfMembresias,on="DNAS",how="left").fillna(0)
+        dfPredicciones["TALONES_DIARIOS_ESTIMADOS"]=dfPredicciones["CANTIDAD_BOLETOS_MEMBRESIAS"]+dfPredicciones["TALONES_DIARIOS_ESTIMADOS"]
+        dfPredicciones["TALONES_ESTIMADOS"]=dfPredicciones.groupby("SORTEO")["TALONES_DIARIOS_ESTIMADOS"].cumsum()
+        dfPredicciones=dfPredicciones.drop("CANTIDAD_BOLETOS_MEMBRESIAS",axis=1)
+
         fechaInicio = self.fechaCelebra - timedelta(days=int(maxDNAS))
         fechaFin = self.fechaCelebra
 
