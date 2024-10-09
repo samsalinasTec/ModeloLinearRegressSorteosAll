@@ -193,9 +193,13 @@ class SorteosTecLRWM:
 
         DNASColumn=range(maxDNAS,0,-1)
         IDColumn=self.data.loc[self.data["NOMBRE"]==self.nombreSorteo,"ID_SORTEO"].max()
-        dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),["CANTIDAD_BOLETOS_MEMBRESIAS", "DNAS"]]
         AvanceEstimColumn= self.y_predict
-        
+
+        if self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),"CANTIDAD_BOLETOS_MEMBRESIAS"].any():
+            dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.nombreSorteo),["CANTIDAD_BOLETOS_MEMBRESIAS", "DNAS"]]
+
+        else:
+            dfMembresias=self.data.loc[(self.data["NOMBRE"]==self.sorteosEntrenamiento[-2]),["CANTIDAD_BOLETOS_MEMBRESIAS", "DNAS"]]        
 
 
         PrediccionesDict={"ID_SORTEO":IDColumn,"SORTEO":self.nombreSorteo,"DNAS":DNASColumn,"TALONES_ESTIMADOS":AvanceEstimColumn*self.emision}
