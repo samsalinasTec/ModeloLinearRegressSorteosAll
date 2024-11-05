@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 from sklearn.model_selection import train_test_split
-from ClassFunctions import SorteosTecLinealRegress, DNASColumn, BQLoad
+from ClassFunctions import SorteosTecLinealRegress, DNASColumn, BQLoad, SorteosTecLRWM
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
@@ -60,11 +60,13 @@ dfBoletosEscalado["PORCENTAJE_DNAS"]=(max_days-(dfBoletosEscalado["DNAS"]-1))/ma
 dfBoletosEscalado=dfBoletosEscalado.sort_values(["NOMBRE","DNAS"],ascending=False)
 
 
-dfPrediccionesTST217=SorteosTecLinealRegress("Sorteo Tradicional 217",270_000,pd.to_datetime("21/12/2024",dayfirst=True),["Sorteo Tradicional 211","Sorteo Tradicional 213","Sorteo Tradicional 215","Sorteo Tradicional 217"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
-dfPrediccionesAVT29=SorteosTecLinealRegress("Sorteo AventuraT 29",80_000,pd.to_datetime("18/01/2025",dayfirst=True),["Sorteo AventuraT 23","Sorteo AventuraT 25","Sorteo AventuraT 27","Sorteo AventuraT 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
-dfPrediccionesSOE47=SorteosTecLinealRegress("Sorteo Educativo 47",390_000,pd.to_datetime("19/10/2024",dayfirst=True),["Sorteo Educativo 41","Sorteo Educativo 43","Sorteo Educativo 45","Sorteo Educativo 47"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
-dfPrediccionesSMS30=SorteosTecLinealRegress("Sorteo Mi Sueño 30",260_000,pd.to_datetime("23/11/2024",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 27","Sorteo Mi Sueño 28","Sorteo Mi Sueño 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
-dfPrediccionesLQ11=SorteosTecLinealRegress("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesTST217=SorteosTecLRWM("Sorteo Tradicional 217",270_000,pd.to_datetime("21/12/2024",dayfirst=True),["Sorteo Tradicional 211","Sorteo Tradicional 213","Sorteo Tradicional 215","Sorteo Tradicional 217"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesAVT29=SorteosTecLRWM("Sorteo AventuraT 29",80_000,pd.to_datetime("18/01/2025",dayfirst=True),["Sorteo AventuraT 23","Sorteo AventuraT 25","Sorteo AventuraT 27","Sorteo AventuraT 29"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesSOE47=SorteosTecLRWM("Sorteo Educativo 48",390_000,pd.to_datetime("24/05/2025",dayfirst=True),["Sorteo Educativo 42","Sorteo Educativo 44","Sorteo Educativo 46","Sorteo Educativo 48"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesSMS30=SorteosTecLRWM("Sorteo Mi Sueño 30",260_000,pd.to_datetime("23/11/2024",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 27","Sorteo Mi Sueño 28","Sorteo Mi Sueño 29","Sorteo Mi Sueño 30"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesDDXV10=SorteosTecLRWM("DINERO DE X VIDA 10",290_000,pd.to_datetime("22/02/2025",dayfirst=True),["DINERO DE X VIDA 6","DINERO DE X VIDA 8","DINERO DE X VIDA 10"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+dfPrediccionesLQ11=SorteosTecLRWM("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+ObjPrediccionesSMS31=SorteosTecLRWM("Sorteo Mi Sueño 31",270_000,pd.to_datetime("22/03/2025",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 29","Sorteo Mi Sueño 28","Sorteo Mi Sueño 31"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 
 
 listDataframes = [v for k, v in globals().items() if k.startswith('dfPredicciones')]

@@ -70,6 +70,8 @@ dfPrediccionesSOE47=SorteosTecLRWM("Sorteo Educativo 48",390_000,pd.to_datetime(
 dfPrediccionesSMS30=SorteosTecLRWM("Sorteo Mi Sueño 30",260_000,pd.to_datetime("23/11/2024",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 27","Sorteo Mi Sueño 28","Sorteo Mi Sueño 29","Sorteo Mi Sueño 30"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 dfPrediccionesDDXV10=SorteosTecLRWM("DINERO DE X VIDA 10",290_000,pd.to_datetime("22/02/2025",dayfirst=True),["DINERO DE X VIDA 6","DINERO DE X VIDA 8","DINERO DE X VIDA 10"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 dfPrediccionesLQ11=SorteosTecLRWM("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+ObjPrediccionesSMS31=SorteosTecLRWM("Sorteo Mi Sueño 31",270_000,pd.to_datetime("22/03/2025",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 29","Sorteo Mi Sueño 28","Sorteo Mi Sueño 31"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
+
 
 
 listDataframes = [v for k, v in globals().items() if k.startswith('dfPredicciones')]
