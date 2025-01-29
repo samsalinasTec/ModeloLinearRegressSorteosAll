@@ -70,7 +70,7 @@ dfPrediccionesSMS30=SorteosTecLRWM("Sorteo Mi Sueño 30",260_000,pd.to_datetime(
 dfPrediccionesDDXV10=SorteosTecLRWM("DINERO DE X VIDA 10",290_000,pd.to_datetime("22/02/2025",dayfirst=True),["DINERO DE X VIDA 6","DINERO DE X VIDA 8","DINERO DE X VIDA 10"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 dfPrediccionesLQ11=SorteosTecLRWM("LQ 11",80_000,pd.to_datetime("28/05/2025",dayfirst=True),["LQ 8","LQ 9","LQ 10","LQ 11"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 ObjPrediccionesSMS31=SorteosTecLRWM("Sorteo Mi Sueño 31",270_000,pd.to_datetime("22/03/2025",dayfirst=True),["Sorteo Mi Sueño 25","Sorteo Mi Sueño 29","Sorteo Mi Sueño 28","Sorteo Mi Sueño 31"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
-ObjPrediccionesAVT30=SorteosTecLRWM("Sorteo AventuraT 30",80_000,pd.to_datetime("12/04/2025",dayfirst=True),["Sorteo AventuraT 24","Sorteo AventuraT 26","Sorteo AventuraT 28","Sorteo AventuraT 30"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado)
+ObjPrediccionesAVT30=SorteosTecLRWM("Sorteo AventuraT 30",80_000,pd.to_datetime("12/04/2025",dayfirst=True),["Sorteo AventuraT 24","Sorteo AventuraT 26","Sorteo AventuraT 28","Sorteo AventuraT 30"],"PORCENTAJE_DNAS","PORCENTAJE_DE_AVANCE_SIN_MEMBRE",dfBoletosEscalado).predict()
 
 
 
